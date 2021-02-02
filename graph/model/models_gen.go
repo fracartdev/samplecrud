@@ -3,11 +3,11 @@
 package model
 
 type Author struct {
-	Name  *string `json:"name"`
+	Name  string  `json:"name"`
 	Books []*Book `json:"books"`
 }
 
 type Book struct {
-	Title  *string `json:"title"`
+	Title  string  `json:"title"`
 	Author *Author `json:"author"`
 }

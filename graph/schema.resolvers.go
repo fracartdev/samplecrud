@@ -16,7 +16,13 @@ func (r *mutationResolver) AddBook(ctx context.Context, title *string, author *s
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+	var links []*model.Book
+	dummyLink := model.Book{
+		Title:  "our dummy link",
+		Author: &model.Author{Name: "Dido"},
+	}
+	links = append(links, &dummyLink)
+	return links, nil
 }
 
 func (r *queryResolver) Authors(ctx context.Context) ([]*model.Author, error) {
