@@ -11,11 +11,15 @@ import (
 	"github.com/fracartdev/samplecrud/graph/model"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) AddBook(ctx context.Context, title *string, author *string) (*model.Book, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) Authors(ctx context.Context) ([]*model.Author, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
