@@ -14,6 +14,7 @@ func (r *mutationResolver) AddBook(ctx context.Context, input model.NewBook) (*m
 	var book model.Book
 
 	book.Title = input.Title
+	book.Author = input.Author
 
 	return &book, nil
 }
