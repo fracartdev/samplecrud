@@ -15,6 +15,6 @@ type Book struct {
 }
 
 type NewBook struct {
-	Title    string `json:"title"`
-	AuthorID string `json:"authorID"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
 }

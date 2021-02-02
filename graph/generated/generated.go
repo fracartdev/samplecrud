@@ -238,7 +238,7 @@ type Query {
 
 input NewBook {
   title: String!
-  authorID: ID!
+  author: String!
 }
 
 type Mutation {
@@ -1802,11 +1802,11 @@ func (ec *executionContext) unmarshalInputNewBook(ctx context.Context, obj inter
 			if err != nil {
 				return it, err
 			}
-		case "authorID":
+		case "author":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("authorID"))
-			it.AuthorID, err = ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("author"))
+			it.Author, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

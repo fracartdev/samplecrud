@@ -17,7 +17,7 @@ type Query {
 
 input NewBook {
   title: String!
-  authorID: ID!
+  author: String!
 }
 
 type Mutation {
