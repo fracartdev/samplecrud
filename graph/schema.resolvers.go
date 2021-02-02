@@ -11,14 +11,14 @@ import (
 	"github.com/fracartdev/samplecrud/graph/model"
 )
 
-func (r *mutationResolver) AddBook(ctx context.Context, title *string, author *string) (*model.Book, error) {
+func (r *mutationResolver) AddBook(ctx context.Context, input model.NewBook) (*model.Book, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
 	var links []*model.Book
 	dummyLink := model.Book{
-		Title:  "our dummy link",
+		Title:  "Reti Logiche",
 		Author: &model.Author{Name: "Dido"},
 	}
 	links = append(links, &dummyLink)

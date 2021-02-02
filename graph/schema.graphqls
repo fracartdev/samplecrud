@@ -1,9 +1,11 @@
 type Book {
+  id: ID!
   title: String!
   author: Author!
 }
 
 type Author {
+  id: ID!
   name: String!
   books: [Book]
 }
@@ -13,6 +15,11 @@ type Query {
   authors: [Author]
 }
 
+input NewBook {
+  title: String!
+  authorID: ID!
+}
+
 type Mutation {
-  addBook(title: String, author: String): Book
+  addBook(input: NewBook!): Book
 }
