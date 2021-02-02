@@ -1,18 +1,11 @@
 type Book {
   id: ID!
   title: String!
-  author: Author!
-}
-
-type Author {
-  id: ID!
-  name: String!
-  books: [Book]
+  author: String!
 }
 
 type Query {
   books: [Book]
-  authors: [Author]
 }
 
 input NewBook {

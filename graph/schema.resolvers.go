@@ -5,28 +5,27 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/fracartdev/samplecrud/graph/generated"
 	"github.com/fracartdev/samplecrud/graph/model"
 )
 
 func (r *mutationResolver) AddBook(ctx context.Context, input model.NewBook) (*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+	var book model.Book
+
+	book.Title = input.Title
+
+	return &book, nil
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
-	var links []*model.Book
-	dummyLink := model.Book{
+	var books []*model.Book
+	dummyBook := model.Book{
 		Title:  "Reti Logiche",
-		Author: &model.Author{Name: "Dido"},
+		Author: "Dido",
 	}
-	links = append(links, &dummyLink)
-	return links, nil
-}
-
-func (r *queryResolver) Authors(ctx context.Context) ([]*model.Author, error) {
-	panic(fmt.Errorf("not implemented"))
+	books = append(books, &dummyBook)
+	return books, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
