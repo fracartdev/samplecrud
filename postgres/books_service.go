@@ -3,6 +3,9 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+
+	// importo il driver
+	_ "github.com/lib/pq"
 )
 
 // BooksService struct mi mette a disposizione le dipendenze di cui ho ibisogno per implementare l'interfaccia
