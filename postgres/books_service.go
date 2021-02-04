@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/fracartdev/samplecrud/books"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -38,7 +39,7 @@ func (t *BooksService) Init() error {
 	return nil
 }
 
-// Create metodo per implementare l'interfaccia BookService
+// Create metodo per aggiungere un libro al db
 func (t *BooksService) Create(title string, author string) (*string, error) {
 	insertSQL := "insert into books(id, title, author) values ($1, $2, $3)"
 
@@ -69,6 +70,24 @@ func (t *BooksService) Create(title string, author string) (*string, error) {
 
 	return &idStr, nil
 }
+
+// Read metodo per leggere un libro dal db
+func (t *BooksService) Read(id string) (*books.BookItem, error) {
+	selectSQL := "select id, title, author, createdAt, updatedAt from books where id = $1"
+	dbPool := t.getConnection()
+	defer dbPool.Close()
+
+	var bookItem books.BookItem
+	err := dbPool.QueryRow(context.Background(), selectSQL, id).Scan(&bookItem.ID, &bookItem.Title, &bookItem.Author, &bookItem.CreatedOn, &bookItem.UpdatedOn)
+	if err != nil {
+		return nil, err
+	}
+	return &bookItem, nil
+}
+
+// Update metodo per aggiornare libro
+
+// Delete metodo per cancellare libro
 
 func (t *BooksService) getConnection() *pgxpool.Pool {
 	dbPool, err := pgxpool.Connect(context.Background(), t.getDBConnectionString())
