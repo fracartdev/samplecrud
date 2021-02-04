@@ -86,8 +86,56 @@ func (t *BooksService) Read(id string) (*books.BookItem, error) {
 }
 
 // Update metodo per aggiornare libro
+func (t *BooksService) Update(id string, title string, author string) error {
+	updateSQL := "update books set title = $1, author = $2 where id = $3"
+	ctx := context.Background()
+	dbPool := t.getConnection()
+	defer dbPool.Close()
+	tx, err := dbPool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(ctx, updateSQL, title, author, id)
+	if err != nil {
+		log.Println("ERROR: Could not save the Book item due to the error:", err)
+		rollbackErr := tx.Rollback(ctx)
+		log.Fatal("ERROR: Transaction rollback failed due to the error: ", rollbackErr)
+		return err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 // Delete metodo per cancellare libro
+func (t *BooksService) Delete(id string) error {
+	deleteSQL := "delete from books where id = $1"
+
+	ctx := context.Background()
+	dbPool := t.getConnection()
+	defer dbPool.Close()
+	tx, err := dbPool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(ctx, deleteSQL, id)
+	if err != nil {
+		log.Println("ERROR: Could not delete the Book item due to the error:", err)
+		rollbackErr := tx.Rollback(ctx)
+		log.Fatal("ERROR: Transaction rollback failed due to the error: ", rollbackErr)
+		return err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (t *BooksService) getConnection() *pgxpool.Pool {
 	dbPool, err := pgxpool.Connect(context.Background(), t.getDBConnectionString())
