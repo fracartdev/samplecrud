@@ -21,14 +21,13 @@ type BooksService struct {
 func (t *BooksService) Init() error {
 	dbConnectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", t.DbHost, t.DbPort, t.DbUserName, t.DbPassword, t.DbName)
 
-	db, err := sql.Open("postgres", dbConnectionString)
+	conn, err := sql.Open("postgres", dbConnectionString)
+
 	if err != nil {
 		return err
 	}
 
-	defer db.Close()
-
-	err = db.Ping()
+	err = conn.Ping()
 	if err != nil {
 		return err
 	}
@@ -39,5 +38,14 @@ func (t *BooksService) Init() error {
 
 // Create metodo per implementare l'interfaccia BookService
 func (t *BooksService) Create(title string, author string) (*string, error) {
-	panic("Da implementare")
+	var id int
+	var createdAt string
+	query := `INSERT INTO books (title, author) VALUES ($1, $2) RETURNING id, created_at`
+	err := db.Conn.QueryRow(query, item.Name, item.Description).Scan(&id, &createdAt)
+	if err != nil {
+		return err
+	}
+	item.ID = id
+	item.CreatedAt = createdAt
+	return nil
 }
