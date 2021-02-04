@@ -51,7 +51,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddBook    func(childComplexity int, input model.BookInput) int
 		DeleteBook func(childComplexity int, id string, deletedBook model.BookInput) int
-		ReadBook   func(childComplexity int, id string, readBook model.BookInput) int
+		ReadBook   func(childComplexity int, id string) int
 		UpdateBook func(childComplexity int, id string, updatedBook model.BookInput) int
 	}
 
@@ -64,7 +64,7 @@ type MutationResolver interface {
 	AddBook(ctx context.Context, input model.BookInput) (*model.Book, error)
 	UpdateBook(ctx context.Context, id string, updatedBook model.BookInput) (*model.Book, error)
 	DeleteBook(ctx context.Context, id string, deletedBook model.BookInput) (*model.Book, error)
-	ReadBook(ctx context.Context, id string, readBook model.BookInput) (*model.Book, error)
+	ReadBook(ctx context.Context, id string) (*model.Book, error)
 }
 type QueryResolver interface {
 	Books(ctx context.Context) ([]*model.Book, error)
@@ -140,7 +140,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.ReadBook(childComplexity, args["id"].(string), args["readBook"].(model.BookInput)), true
+		return e.complexity.Mutation.ReadBook(childComplexity, args["id"].(string)), true
 
 	case "Mutation.updateBook":
 		if e.complexity.Mutation.UpdateBook == nil {
@@ -244,7 +244,7 @@ type Mutation {
   addBook(input: BookInput!): Book
   updateBook(id: String!, updatedBook: BookInput!): Book
   deleteBook(id: String!, deletedBook: BookInput!): Book
-  readBook(id: String!, readBook: BookInput!): Book
+  readBook(id: String!): Book
 }
 `, BuiltIn: false},
 }
@@ -305,15 +305,6 @@ func (ec *executionContext) field_Mutation_readBook_args(ctx context.Context, ra
 		}
 	}
 	args["id"] = arg0
-	var arg1 model.BookInput
-	if tmp, ok := rawArgs["readBook"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("readBook"))
-		arg1, err = ec.unmarshalNBookInput2githubᚗcomᚋfracartdevᚋsamplecrudᚋgraphᚋmodelᚐBookInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["readBook"] = arg1
 	return args, nil
 }
 
@@ -641,7 +632,7 @@ func (ec *executionContext) _Mutation_readBook(ctx context.Context, field graphq
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().ReadBook(rctx, args["id"].(string), args["readBook"].(model.BookInput))
+		return ec.resolvers.Mutation().ReadBook(rctx, args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

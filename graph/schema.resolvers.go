@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/fracartdev/samplecrud/books"
 	"github.com/fracartdev/samplecrud/graph/generated"
 	"github.com/fracartdev/samplecrud/graph/model"
+	"github.com/google/uuid"
 )
 
 func (r *mutationResolver) AddBook(ctx context.Context, input model.BookInput) (*model.Book, error) {
@@ -27,15 +29,61 @@ func (r *mutationResolver) AddBook(ctx context.Context, input model.BookInput) (
 }
 
 func (r *mutationResolver) UpdateBook(ctx context.Context, id string, updatedBook model.BookInput) (*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return nil, fmt.Errorf("id non valido: %s", id)
+	}
+
+	err = r.Books.Update(id, updatedBook.Title, updatedBook.Author)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("Libro con id: %s aggiornato", id)
+	return &model.Book{
+		ID:     id,
+		Title:  updatedBook.Title,
+		Author: updatedBook.Author,
+	}, nil
 }
 
 func (r *mutationResolver) DeleteBook(ctx context.Context, id string, deletedBook model.BookInput) (*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return nil, fmt.Errorf("id non valido: %s", id)
+	}
+
+	err = r.Books.Delete(id)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("Libro con id: %s eliminato", id)
+	return &model.Book{
+		ID:     id,
+		Title:  deletedBook.Title,
+		Author: deletedBook.Author,
+	}, nil
 }
 
-func (r *mutationResolver) ReadBook(ctx context.Context, id string, readBook model.BookInput) (*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) ReadBook(ctx context.Context, id string) (*model.Book, error) {
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return nil, fmt.Errorf("id non valido: %s", id)
+	}
+
+	var result *books.BookItem
+	result, err = r.Books.Read(id)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("Libro con id: %s trovato", id)
+	return &model.Book{
+		ID:     id,
+		Title:  result.Title,
+		Author: result.Author,
+	}, nil
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {

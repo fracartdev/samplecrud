@@ -6,7 +6,7 @@ import "time"
 type BookItem struct {
 	ID        string
 	Title     string
-	Author    bool
+	Author    string
 	CreatedOn time.Time
 	UpdatedOn *time.Time
 }
@@ -16,4 +16,6 @@ type Book interface {
 	Init() error
 	Create(title string, author string) (*string, error)
 	Read(id string) (*BookItem, error)
+	Update(id string, title string, author string) error
+	Delete(id string) error
 }

@@ -17,5 +17,5 @@ type Mutation {
   addBook(input: BookInput!): Book
   updateBook(id: String!, updatedBook: BookInput!): Book
   deleteBook(id: String!, deletedBook: BookInput!): Book
-  readBook(id: String!, readBook: BookInput!): Book
+  readBook(id: String!): Book
 }
