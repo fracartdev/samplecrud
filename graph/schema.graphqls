@@ -8,11 +8,14 @@ type Query {
   books: [Book]
 }
 
-input NewBook {
+input BookInput {
   title: String!
   author: String!
 }
 
 type Mutation {
-  addBook(input: NewBook!): Book
+  addBook(input: BookInput!): Book
+  updateBook(id: String!, updatedBook: BookInput!): Book
+  deleteBook(id: String!, deletedBook: BookInput!): Book
+  readBook(id: String!, readBook: BookInput!): Book
 }

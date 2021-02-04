@@ -8,7 +8,7 @@ type Book struct {
 	Author string `json:"author"`
 }
 
-type NewBook struct {
+type BookInput struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
 }

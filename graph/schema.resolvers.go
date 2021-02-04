@@ -12,7 +12,7 @@ import (
 	"github.com/fracartdev/samplecrud/graph/model"
 )
 
-func (r *mutationResolver) AddBook(ctx context.Context, input model.NewBook) (*model.Book, error) {
+func (r *mutationResolver) AddBook(ctx context.Context, input model.BookInput) (*model.Book, error) {
 	id, err := r.Books.Create(input.Title, input.Author)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,18 @@ func (r *mutationResolver) AddBook(ctx context.Context, input model.NewBook) (*m
 		Title:  input.Title,
 		Author: input.Author,
 	}, nil
+}
 
+func (r *mutationResolver) UpdateBook(ctx context.Context, id string, updatedBook model.BookInput) (*model.Book, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) DeleteBook(ctx context.Context, id string, deletedBook model.BookInput) (*model.Book, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *mutationResolver) ReadBook(ctx context.Context, id string, readBook model.BookInput) (*model.Book, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
