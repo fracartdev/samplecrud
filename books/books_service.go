@@ -18,4 +18,5 @@ type Book interface {
 	Read(id string) (*BookItem, error)
 	Update(id string, title string, author string) error
 	Delete(id string) error
+	List() ([]BookItem, error)
 }

@@ -15,7 +15,7 @@ import (
 )
 
 func (r *mutationResolver) AddBook(ctx context.Context, input model.BookInput) (*model.Book, error) {
-	id, err := r.Books.Create(input.Title, input.Author)
+	id, err := r.BooksLib.Create(input.Title, input.Author)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (r *mutationResolver) UpdateBook(ctx context.Context, id string, updatedBoo
 		return nil, fmt.Errorf("id non valido: %s", id)
 	}
 
-	err = r.Books.Update(id, updatedBook.Title, updatedBook.Author)
+	err = r.BooksLib.Update(id, updatedBook.Title, updatedBook.Author)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (r *mutationResolver) DeleteBook(ctx context.Context, id string, deletedBoo
 		return nil, fmt.Errorf("id non valido: %s", id)
 	}
 
-	err = r.Books.Delete(id)
+	err = r.BooksLib.Delete(id)
 	if err != nil {
 		return nil, err
 	}
@@ -66,14 +66,13 @@ func (r *mutationResolver) DeleteBook(ctx context.Context, id string, deletedBoo
 	}, nil
 }
 
-func (r *mutationResolver) ReadBook(ctx context.Context, id string) (*model.Book, error) {
+func (r *queryResolver) Book(ctx context.Context, id string) (*model.Book, error) {
 	_, err := uuid.Parse(id)
 	if err != nil {
 		return nil, fmt.Errorf("id non valido: %s", id)
 	}
 
-	var result *books.BookItem
-	result, err = r.Books.Read(id)
+	result, err := r.BooksLib.Read(id)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +86,22 @@ func (r *mutationResolver) ReadBook(ctx context.Context, id string) (*model.Book
 }
 
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
-	panic(fmt.Errorf("not implemented"))
+	var items []*model.Book
+	var savedItems []books.BookItem
+	savedItems, err := r.BooksLib.List()
+	if err != nil {
+		return nil, err
+	}
+	for i, savedItem := range savedItems {
+		var item model.Book
+		savedItem = savedItems[i]
+		item.ID = savedItem.ID
+		item.Title = savedItem.Title
+		item.Author = savedItem.Author
+		items = append(items, &item)
+	}
+	return items, nil
+
 }
 
 // Mutation returns generated.MutationResolver implementation.

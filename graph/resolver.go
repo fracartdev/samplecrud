@@ -8,5 +8,5 @@ import "github.com/fracartdev/samplecrud/books"
 
 // Resolver ...
 type Resolver struct {
-	Books books.Book
+	BooksLib books.Book
 }

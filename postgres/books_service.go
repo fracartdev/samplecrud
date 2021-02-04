@@ -9,6 +9,9 @@ import (
 	"github.com/fracartdev/samplecrud/books"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
+
+	// import del driver pgx
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 // BooksService struct mi mette a disposizione le dipendenze di cui ho ibisogno per implementare l'interfaccia
@@ -73,7 +76,7 @@ func (t *BooksService) Create(title string, author string) (*string, error) {
 
 // Read metodo per leggere un libro dal db
 func (t *BooksService) Read(id string) (*books.BookItem, error) {
-	selectSQL := "select id, title, author, createdAt, updatedAt from books where id = $1"
+	selectSQL := "select id, title, author, created_at, updated_on from books where id = $1"
 	dbPool := t.getConnection()
 	defer dbPool.Close()
 
@@ -135,6 +138,33 @@ func (t *BooksService) Delete(id string) error {
 		return err
 	}
 	return nil
+}
+
+// List recupera una lista di tutti i libri
+func (t *BooksService) List() ([]books.BookItem, error) {
+	selectSQL := "select id, title, author, created_at, updated_on from books"
+	dbPool := t.getConnection()
+	defer dbPool.Close()
+	var bookItems []books.BookItem
+	rows, err := dbPool.Query(context.Background(), selectSQL)
+	if rows != nil {
+		defer rows.Close()
+	}
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var bookItem books.BookItem
+		err = rows.Scan(&bookItem.ID, &bookItem.Title, &bookItem.Author, &bookItem.CreatedOn, &bookItem.UpdatedOn)
+		if err != nil {
+			return nil, err
+		}
+		bookItems = append(bookItems, bookItem)
+	}
+	if rows.Err() != nil {
+		return nil, err
+	}
+	return bookItems, nil
 }
 
 func (t *BooksService) getConnection() *pgxpool.Pool {
